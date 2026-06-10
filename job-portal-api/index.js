@@ -1,0 +1,48 @@
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
+
+const authRoutes = require('./routes/auth');
+const candidateRoutes = require('./routes/candidates');
+const companyRoutes = require('./routes/companies');
+const jobRoutes = require('./routes/jobs');
+const applicationRoutes = require('./routes/applications');
+const messageRoutes = require('./routes/messages');
+const notificationRoutes = require('./routes/notifications');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Standard Middlewares
+app.use(cors());
+app.use(express.json());
+
+// Routes Mounting
+app.use('/api/auth', authRoutes);
+app.use('/api/candidates', candidateRoutes);
+app.use('/api/companies', companyRoutes);
+app.use('/api/jobs', jobRoutes);
+app.use('/api/applications', applicationRoutes);
+app.use('/api/messages', messageRoutes);
+app.use('/api/notifications', notificationRoutes);
+
+// Simple Health Check Endpoint
+app.get('/health', (req, res) => {
+  res.json({ success: true, message: 'Job Portal API is running smoothly.' });
+});
+
+// 404 Route handler
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: 'Endpoint not found' });
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled Server Error:', err);
+  res.status(500).json({ success: false, message: 'An unexpected server error occurred.' });
+});
+
+// Server Initialization
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
