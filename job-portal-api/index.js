@@ -20,7 +20,23 @@ app.use(cors());
 app.use(express.json());
 
 // Swagger API Documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.get('/swagger.json', (req, res) => {
+  const doc = JSON.parse(JSON.stringify(swaggerDocument));
+  doc.servers = [
+    {
+      url: `${req.protocol}://${req.get('host')}`,
+      description: 'Current Environment Server'
+    }
+  ];
+  res.json(doc);
+});
+
+const swaggerOptions = {
+  swaggerOptions: {
+    url: '/swagger.json'
+  }
+};
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null, swaggerOptions));
 
 // Routes Mounting
 app.use('/api/auth', authRoutes);
