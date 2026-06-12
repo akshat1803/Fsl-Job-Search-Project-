@@ -1,0 +1,847 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Job Portal REST API",
+    "description": "Comprehensive REST API documentation for the Job Portal system supporting Candidates, Companies, Jobs, Applications, Messaging, and Shortlisting.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local Development Server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter your JWT token in the format: Bearer <token>"
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "An error occurred."
+          }
+        }
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "required": [
+          "first_name",
+          "last_name",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "first_name": { "type": "string", "example": "Jatin" },
+          "last_name": { "type": "string", "example": "Verma" },
+          "email": { "type": "string", "format": "email", "example": "jatinverma@example.com" },
+          "password": { "type": "string", "example": "Jatin@123" },
+          "mobile_no": { "type": "string", "example": "+1234567890" },
+          "company_name": { "type": "string", "example": "Acme Corp", "description": "Provide this to automatically register as a Company role" }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": { "type": "string", "format": "email", "example": "jatinverma@example.com" },
+          "password": { "type": "string", "example": "Jatin@123" }
+        }
+      },
+      "CandidateProfileUpdate": {
+        "type": "object",
+        "properties": {
+          "firstName": { "type": "string", "example": "Jatin" },
+          "lastName": { "type": "string", "example": "Verma" },
+          "mobileNo": { "type": "string", "example": "+1234567890" },
+          "bio": { "type": "string", "example": "Experienced software developer." },
+          "dob": { "type": "string", "format": "date", "example": "1998-05-12" },
+          "visibility": { "type": "string", "enum": ["public", "hidden", "private"], "example": "public" },
+          "address": {
+            "type": "object",
+            "properties": {
+              "street": { "type": "string", "example": "123 Main St" },
+              "city": { "type": "string", "example": "Jaipur" },
+              "state": { "type": "string", "example": "Rajasthan" },
+              "country": { "type": "string", "example": "India" },
+              "postalCode": { "type": "string", "example": "302001" }
+            }
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "skill": { "type": "string", "example": "React" },
+                "level": { "type": "string", "example": "Advanced" }
+              }
+            }
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "language": { "type": "string", "example": "English" },
+                "level": { "type": "string", "example": "Fluent" }
+              }
+            }
+          },
+          "education": { "type": "array", "items": { "type": "object" } },
+          "experience": { "type": "array", "items": { "type": "object" } },
+          "certifications": { "type": "array", "items": { "type": "object" } },
+          "desiredJob": { "type": "object" }
+        }
+      },
+      "CompanyProfileUpdate": {
+        "type": "object",
+        "properties": {
+          "firstName": { "type": "string", "example": "Aman" },
+          "lastName": { "type": "string", "example": "Don" },
+          "mobileNo": { "type": "string", "example": "+1234567890" },
+          "bio": { "type": "string", "example": "Company Administrator" },
+          "name": { "type": "string", "example": "Acme Corp" },
+          "taxId": { "type": "string", "example": "TAX123" },
+          "vatNo": { "type": "string", "example": "VAT123" },
+          "industryId": { "type": "integer", "example": 1 },
+          "size": { "type": "string", "example": "50-100" },
+          "website": { "type": "string", "example": "https://acme.org" },
+          "logo": { "type": "string", "example": "https://acme.org/logo.png" },
+          "description": { "type": "string", "example": "Industry leading software providers." },
+          "contactPerson": { "type": "string", "example": "Aman" }
+        }
+      },
+      "JobVacancyRequest": {
+        "type": "object",
+        "required": [
+          "title",
+          "employmentTypeId",
+          "workplaceTypeId"
+        ],
+        "properties": {
+          "title": { "type": "string", "example": "Senior React Developer" },
+          "description": { "type": "string", "example": "React.js development role." },
+          "employmentTypeId": { "type": "integer", "example": 1, "description": "1: Full-time, 2: Part-time, 3: Contract, 4: Internship" },
+          "salary": { "type": "number", "example": 120000.00 },
+          "currency": { "type": "string", "example": "INR" },
+          "countryId": { "type": "integer", "example": 1 },
+          "workplaceTypeId": { "type": "integer", "example": 1, "description": "1: Remote, 2: On-site, 3: Hybrid" },
+          "requiredSkills": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["React", "Redux", "TypeScript"]
+          },
+          "deadline": { "type": "string", "format": "date", "example": "2025-09-30" },
+          "status": { "type": "string", "enum": ["open", "closed"], "example": "open" }
+        }
+      },
+      "ApplicationRequest": {
+        "type": "object",
+        "required": [
+          "vacancy_id"
+        ],
+        "properties": {
+          "vacancy_id": { "type": "string", "format": "uuid", "example": "11111111-1111-1111-1111-111111111114" }
+        }
+      },
+      "ApplicationStatusUpdate": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": { "type": "string", "enum": ["applied", "shortlisted", "contacted", "hired", "rejected"], "example": "shortlisted" }
+        }
+      },
+      "ShortlistRequest": {
+        "type": "object",
+        "required": [
+          "candidate_id"
+        ],
+        "properties": {
+          "candidate_id": { "type": "string", "format": "uuid", "example": "7bc31252-bb79-457b-a040-6191e16f39b6" }
+        }
+      },
+      "MessageRequest": {
+        "type": "object",
+        "required": [
+          "receiver_id",
+          "body"
+        ],
+        "properties": {
+          "receiver_id": { "type": "string", "format": "uuid", "example": "11111111-1111-1111-1111-111111111111" },
+          "body": { "type": "string", "example": "Hello, I am interested in your open positions." }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register new user (candidate or company)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "User registered successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "userId": { "type": "string", "format": "uuid" },
+                        "candidateId": { "type": "string", "format": "uuid", "nullable": true },
+                        "companyId": { "type": "string", "format": "uuid", "nullable": true },
+                        "first_name": { "type": "string" },
+                        "last_name": { "type": "string" },
+                        "email": { "type": "string" },
+                        "role": { "type": "string", "example": "candidate" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or email already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login, return JWT token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Login successful" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": { "type": "string", "example": "eyJhbGciOiJIUzI1NiIsIn..." },
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "id": { "type": "string", "format": "uuid" },
+                            "first_name": { "type": "string" },
+                            "last_name": { "type": "string" },
+                            "email": { "type": "string" },
+                            "role": { "type": "string", "example": "candidate" },
+                            "candidateId": { "type": "string", "format": "uuid", "nullable": true },
+                            "companyId": { "type": "string", "format": "uuid", "nullable": true }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/candidates/{id}": {
+      "get": {
+        "tags": ["Candidates"],
+        "summary": "Get candidate profile",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "example": "7bc31252-bb79-457b-a040-6191e16f39b6"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "type": "object" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Candidate not found",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Candidates"],
+        "summary": "Update candidate profile (consolidated endpoint)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "example": "7bc31252-bb79-457b-a040-6191e16f39b6"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CandidateProfileUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Profile updated successfully" }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized to update this profile"
+          }
+        }
+      }
+    },
+    "/api/candidates/{id}/applications": {
+      "get": {
+        "tags": ["Candidates"],
+        "summary": "Get candidate's job applications",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "example": "7bc31252-bb79-457b-a040-6191e16f39b6"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/companies/{id}": {
+      "get": {
+        "tags": ["Companies"],
+        "summary": "Get company profile",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "example": "66666666-6666-6666-6666-666666666667"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Companies"],
+        "summary": "Update company profile",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "example": "66666666-6666-6666-6666-666666666667"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanyProfileUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Company profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Company profile updated successfully" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs": {
+      "get": {
+        "tags": ["Jobs"],
+        "summary": "Get all active jobs (with filters)",
+        "parameters": [
+          { "name": "search", "in": "query", "schema": { "type": "string" }, "description": "Search in title/description" },
+          { "name": "countryId", "in": "query", "schema": { "type": "integer" } },
+          { "name": "workplaceTypeId", "in": "query", "schema": { "type": "integer" } },
+          { "name": "employmentTypeId", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Jobs"],
+        "summary": "Create job vacancy (company only)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobVacancyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Job vacancy created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Job vacancy created successfully" },
+                    "data": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs/{id}": {
+      "get": {
+        "tags": ["Jobs"],
+        "summary": "Get single job detail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "example": "11111111-1111-1111-1111-111111111114"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Jobs"],
+        "summary": "Update job vacancy (company owner only)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "example": "11111111-1111-1111-1111-111111111114"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobVacancyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Job vacancy updated successfully"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Jobs"],
+        "summary": "Delete job vacancy (company owner only)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "example": "11111111-1111-1111-1111-111111111114"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job vacancy deleted successfully"
+          }
+        }
+      }
+    },
+    "/api/applications": {
+      "post": {
+        "tags": ["Applications"],
+        "summary": "Apply for a job (candidate only)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Application submitted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Application submitted successfully" },
+                    "data": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/applications/{id}": {
+      "get": {
+        "tags": ["Applications"],
+        "summary": "Get application detail",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "example": "11111111-1111-1111-1111-111111111115"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Applications"],
+        "summary": "Update application status (company owner only)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "example": "11111111-1111-1111-1111-111111111115"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicationStatusUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Status updated successfully"
+          }
+        }
+      }
+    },
+    "/api/shortlists": {
+      "post": {
+        "tags": ["Shortlists"],
+        "summary": "Shortlist a candidate (company only)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShortlistRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Candidate shortlisted successfully"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Shortlists"],
+        "summary": "Get shortlisted candidates (company only)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/messages": {
+      "post": {
+        "tags": ["Messages"],
+        "summary": "Send a message to a user",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Message sent successfully"
+          }
+        }
+      }
+    },
+    "/api/messages/conversations": {
+      "get": {
+        "tags": ["Messages"],
+        "summary": "Get all conversations (active chats) for logged-in user",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/messages/user/{userId}": {
+      "get": {
+        "tags": ["Messages"],
+        "summary": "Get message history with a specific user",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "example": "11111111-1111-1111-1111-111111111111"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

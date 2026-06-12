@@ -224,17 +224,17 @@ INSERT INTO Users (
     MobileNo, UserRole, Bio, IsVerified, CreatedAt, IsActive
 )
 VALUES
-('11111111-1111-1111-1111-111111111111', 'Anant',   'Sharma',      'anant.sharma@example.com',       '$2a$10$9u2vJ/3lqP01T3x996vBtuUen/xUpqKNuE9G7iQvFp6M4Qc0C3k5u', '9876543210', 2, 'Full Stack Developer',           TRUE,  NOW(), TRUE),
-('22222222-2222-2222-2222-222222222222', 'Rahul',   'Verma',       'rahul.verma@example.com',        '$2a$10$9u2vJ/3lqP01T3x996vBtuUen/xUpqKNuE9G7iQvFp6M4Qc0C3k5u', '9876543211', 2, 'React Developer',                TRUE,  NOW(), TRUE),
-('33333333-3333-3333-3333-333333333333', 'Priya',   'Singh',       'priya.singh@example.com',        '$2a$10$9u2vJ/3lqP01T3x996vBtuUen/xUpqKNuE9G7iQvFp6M4Qc0C3k5u', '9876543212', 2, 'UI/UX Designer',                 FALSE, NOW(), TRUE),
-('44444444-4444-4444-4444-444444444444', 'Amit',    'Kumar',       'amit.kumar@example.com',         '$2a$10$9u2vJ/3lqP01T3x996vBtuUen/xUpqKNuE9G7iQvFp6M4Qc0C3k5u', '9876543213', 2, 'Node.js Developer',              TRUE,  NOW(), TRUE),
-('55555555-5555-5555-5555-555555555555', 'Neha',    'Gupta',       'neha.gupta@example.com',         '$2a$10$9u2vJ/3lqP01T3x996vBtuUen/xUpqKNuE9G7iQvFp6M4Qc0C3k5u', '9876543214', 2, 'QA Engineer',                    TRUE,  NOW(), TRUE),
+('11111111-1111-1111-1111-111111111111', 'Anant',   'Sharma',      'anant.sharma@example.com',       '$2a$10$3TnrcLN/VxO1N3kNtKus0uVQBo24frVJEoMOTLMJr.nwexvTd834u', '9876543210', 2, 'Full Stack Developer',           TRUE,  NOW(), TRUE),
+('22222222-2222-2222-2222-222222222222', 'Rahul',   'Verma',       'rahul.verma@example.com',        '$2a$10$3TnrcLN/VxO1N3kNtKus0uVQBo24frVJEoMOTLMJr.nwexvTd834u', '9876543211', 2, 'React Developer',                TRUE,  NOW(), TRUE),
+('33333333-3333-3333-3333-333333333333', 'Priya',   'Singh',       'priya.singh@example.com',        '$2a$10$3TnrcLN/VxO1N3kNtKus0uVQBo24frVJEoMOTLMJr.nwexvTd834u', '9876543212', 2, 'UI/UX Designer',                 FALSE, NOW(), TRUE),
+('44444444-4444-4444-4444-444444444444', 'Amit',    'Kumar',       'amit.kumar@example.com',         '$2a$10$3TnrcLN/VxO1N3kNtKus0uVQBo24frVJEoMOTLMJr.nwexvTd834u', '9876543213', 2, 'Node.js Developer',              TRUE,  NOW(), TRUE),
+('55555555-5555-5555-5555-555555555555', 'Neha',    'Gupta',       'neha.gupta@example.com',         '$2a$10$3TnrcLN/VxO1N3kNtKus0uVQBo24frVJEoMOTLMJr.nwexvTd834u', '9876543214', 2, 'QA Engineer',                    TRUE,  NOW(), TRUE),
 
-('66666666-6666-6666-6666-666666666666', 'Tech',    'Solutions',   'hr@techsolutions.com',           '$2a$10$9u2vJ/3lqP01T3x996vBtuUen/xUpqKNuE9G7iQvFp6M4Qc0C3k5u', '9000000001', 3, 'Software Development Company',   TRUE,  NOW(), TRUE),
-('77777777-7777-7777-7777-777777777777', 'Digital', 'Innovations', 'careers@digitalinnovations.com', '$2a$10$9u2vJ/3lqP01T3x996vBtuUen/xUpqKNuE9G7iQvFp6M4Qc0C3k5u', '9000000002', 3, 'IT Consulting Firm',             TRUE,  NOW(), TRUE),
-('88888888-8888-8888-8888-888888888888', 'Cloud',   'Systems',     'jobs@cloudsystems.com',          '$2a$10$9u2vJ/3lqP01T3x996vBtuUen/xUpqKNuE9G7iQvFp6M4Qc0C3k5u', '9000000003', 3, 'Cloud Infrastructure Provider',  TRUE,  NOW(), TRUE),
-('99999999-9999-9999-9999-999999999999', 'NextGen', 'Technologies','hr@nextgentech.com',             '$2a$10$9u2vJ/3lqP01T3x996vBtuUen/xUpqKNuE9G7iQvFp6M4Qc0C3k5u', '9000000004', 3, 'AI & ML Solutions',              TRUE,  NOW(), TRUE),
-('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Future',  'Softwares',   'recruitment@futuresoft.com',     '$2a$10$9u2vJ/3lqP01T3x996vBtuUen/xUpqKNuE9G7iQvFp6M4Qc0C3k5u', '9000000005', 3, 'Enterprise Software Company',    TRUE,  NOW(), TRUE);
+('66666666-6666-6666-6666-666666666666', 'Tech',    'Solutions',   'hr@techsolutions.com',           '$2a$10$3TnrcLN/VxO1N3kNtKus0uVQBo24frVJEoMOTLMJr.nwexvTd834u', '9000000001', 3, 'Software Development Company',   TRUE,  NOW(), TRUE),
+('77777777-7777-7777-7777-777777777777', 'Digital', 'Innovations', 'careers@digitalinnovations.com', '$2a$10$3TnrcLN/VxO1N3kNtKus0uVQBo24frVJEoMOTLMJr.nwexvTd834u', '9000000002', 3, 'IT Consulting Firm',             TRUE,  NOW(), TRUE),
+('88888888-8888-8888-8888-888888888888', 'Cloud',   'Systems',     'jobs@cloudsystems.com',          '$2a$10$3TnrcLN/VxO1N3kNtKus0uVQBo24frVJEoMOTLMJr.nwexvTd834u', '9000000003', 3, 'Cloud Infrastructure Provider',  TRUE,  NOW(), TRUE),
+('99999999-9999-9999-9999-999999999999', 'NextGen', 'Technologies','hr@nextgentech.com',             '$2a$10$3TnrcLN/VxO1N3kNtKus0uVQBo24frVJEoMOTLMJr.nwexvTd834u', '9000000004', 3, 'AI & ML Solutions',              TRUE,  NOW(), TRUE),
+('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Future',  'Softwares',   'recruitment@futuresoft.com',     '$2a$10$3TnrcLN/VxO1N3kNtKus0uVQBo24frVJEoMOTLMJr.nwexvTd834u', '9000000005', 3, 'Enterprise Software Company',    TRUE,  NOW(), TRUE);
 
 SET @anant_id  = '11111111-1111-1111-1111-111111111111';
 SET @rahul_id  = '22222222-2222-2222-2222-222222222222';

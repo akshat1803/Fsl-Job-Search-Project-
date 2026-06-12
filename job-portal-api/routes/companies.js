@@ -5,7 +5,7 @@ const { authenticateToken } = require('../middleware/auth');
 
 // GET /api/companies/:id - Get company profile
 router.get('/:id', authenticateToken, async (req, res) => {
-  const companyId = req.params.id; // UUID string
+  const companyId = req.params.id ? req.params.id.trim() : ''; // UUID string
 
   try {
     const [companies] = await pool.query(
@@ -52,7 +52,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 
 // PUT /api/companies/:id - Update company profile
 router.put('/:id', authenticateToken, async (req, res) => {
-  const companyId = req.params.id;
+  const companyId = req.params.id ? req.params.id.trim() : '';
 
   // Authorization check
   if (req.user.role !== 'company' || req.user.companyId !== companyId) {

@@ -89,7 +89,7 @@ router.get('/', optionalAuthenticateToken, async (req, res) => {
 
 // GET /api/jobs/:id - Get single job detail
 router.get('/:id', optionalAuthenticateToken, async (req, res) => {
-  const jobId = req.params.id; // UUID string
+  const jobId = req.params.id ? req.params.id.trim() : ''; // UUID string
 
   try {
     const [jobs] = await pool.query(
@@ -210,7 +210,7 @@ router.post('/', authenticateToken, requireRole('company'), async (req, res) => 
 
 // PUT /api/jobs/:id - Update job vacancy (company owner only)
 router.put('/:id', authenticateToken, requireRole('company'), async (req, res) => {
-  const jobId = req.params.id; // UUID string
+  const jobId = req.params.id ? req.params.id.trim() : ''; // UUID string
   const companyId = req.user.companyId;
 
   if (!companyId) {
@@ -270,7 +270,7 @@ router.put('/:id', authenticateToken, requireRole('company'), async (req, res) =
 
 // DELETE /api/jobs/:id - Delete job vacancy (company owner only)
 router.delete('/:id', authenticateToken, requireRole('company'), async (req, res) => {
-  const jobId = req.params.id; // UUID string
+  const jobId = req.params.id ? req.params.id.trim() : ''; // UUID string
   const companyId = req.user.companyId;
 
   if (!companyId) {

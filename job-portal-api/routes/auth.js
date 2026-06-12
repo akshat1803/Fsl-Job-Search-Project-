@@ -24,16 +24,12 @@ router.post('/register', async (req, res) => {
     return res.status(400).json({ success: false, message: 'First name, last name, email, and password are required' });
   }
 
-  // Map role
+  // Automatically determine role based on presence of company_name
   let userRole = 2; // Default to Candidate
-  if (Role === 'company' || Role === 3) {
-    userRole = 3;
+  if (CompanyName && CompanyName.trim() !== '') {
+    userRole = 3; // Company
   } else if (Role === 'admin' || Role === 1) {
-    userRole = 1;
-  }
-
-  if (userRole === 3 && !CompanyName) {
-    return res.status(400).json({ success: false, message: 'Company name is required for registration as a company' });
+    userRole = 1; // Admin support
   }
 
   const connection = await pool.getConnection();

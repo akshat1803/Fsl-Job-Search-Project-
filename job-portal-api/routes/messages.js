@@ -55,7 +55,7 @@ router.get('/conversations', authenticateToken, async (req, res) => {
 // GET /api/messages/user/:userId - Get message history with a specific user
 router.get('/user/:userId', authenticateToken, async (req, res) => {
   const currentUserId = req.user.id;
-  const targetUserId = req.params.userId;
+  const targetUserId = req.params.userId ? req.params.userId.trim() : '';
 
   try {
     // 1. Mark incoming messages from target user to current user as read

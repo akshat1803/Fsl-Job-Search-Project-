@@ -5,7 +5,7 @@ const { authenticateToken } = require('../middleware/auth');
 
 // GET /api/candidates/:id - Get candidate profile with all details
 router.get('/:id', authenticateToken, async (req, res) => {
-  const candidateId = req.params.id; // UUID string
+  const candidateId = req.params.id ? req.params.id.trim() : ''; // UUID string
 
   try {
     // 1. Get candidate basic & user details from Candidate & Users
@@ -76,7 +76,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 
 // PUT /api/candidates/:id - Update candidate profile (consolidated endpoint)
 router.put('/:id', authenticateToken, async (req, res) => {
-  const candidateId = req.params.id; // UUID string
+  const candidateId = req.params.id ? req.params.id.trim() : ''; // UUID string
 
   // Authorization check: User can only update their own candidate profile
   if (req.user.role !== 'candidate' || req.user.candidateId !== candidateId) {
@@ -168,7 +168,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
 
 // GET /api/candidates/:id/applications - Get candidate's applications
 router.get('/:id/applications', authenticateToken, async (req, res) => {
-  const candidateId = req.params.id;
+  const candidateId = req.params.id ? req.params.id.trim() : '';
 
   if (req.user.role !== 'candidate' || req.user.candidateId !== candidateId) {
     return res.status(403).json({ success: false, message: 'Unauthorized to view these applications' });

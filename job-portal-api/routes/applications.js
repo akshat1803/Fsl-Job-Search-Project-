@@ -79,7 +79,7 @@ router.post('/', authenticateToken, requireRole('candidate'), async (req, res) =
 
 // GET /api/applications/:id - Get application detail (accessible by the candidate or company owner)
 router.get('/:id', authenticateToken, async (req, res) => {
-  const applicationId = req.params.id; // UUID string
+  const applicationId = req.params.id ? req.params.id.trim() : ''; // UUID string
 
   try {
     const [applications] = await pool.query(
@@ -134,7 +134,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 
 // PUT /api/applications/:id - Update status (company owner only)
 router.put('/:id', authenticateToken, requireRole('company'), async (req, res) => {
-  const applicationId = req.params.id; // UUID string
+  const applicationId = req.params.id ? req.params.id.trim() : ''; // UUID string
   const companyId = req.user.companyId;
   const { status } = req.body;
 
