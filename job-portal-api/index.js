@@ -13,6 +13,7 @@ const messageRoutes = require('./routes/messages');
 const shortlistRoutes = require('./routes/shortlists');
 
 const app = express();
+app.enable('trust proxy');
 const PORT = process.env.PORT || 3000;
 
 // Standard Middlewares
@@ -27,9 +28,10 @@ app.use(express.json());
 // Swagger API Documentation
 app.get('/swagger.json', (req, res) => {
   const doc = JSON.parse(JSON.stringify(swaggerDocument));
+  const protocol = req.headers['x-forwarded-proto'] || req.protocol;
   doc.servers = [
     {
-      url: `${req.protocol}://${req.get('host')}`,
+      url: `${protocol}://${req.get('host')}`,
       description: 'Current Environment Server'
     }
   ];
