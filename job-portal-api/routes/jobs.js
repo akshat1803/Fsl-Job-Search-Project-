@@ -224,7 +224,7 @@ router.put('/:id', authenticateToken, requireRole('company'), async (req, res) =
       return res.status(404).json({ success: false, message: 'Job vacancy not found' });
     }
 
-    if (jobs[0].CompanyId !== companyId) {
+    if (!jobs[0].CompanyId || jobs[0].CompanyId.toLowerCase() !== companyId.toLowerCase()) {
       return res.status(403).json({ success: false, message: 'Unauthorized. You do not own this job vacancy.' });
     }
 
@@ -284,7 +284,7 @@ router.delete('/:id', authenticateToken, requireRole('company'), async (req, res
       return res.status(404).json({ success: false, message: 'Job vacancy not found' });
     }
 
-    if (jobs[0].CompanyId !== companyId) {
+    if (!jobs[0].CompanyId || jobs[0].CompanyId.toLowerCase() !== companyId.toLowerCase()) {
       return res.status(403).json({ success: false, message: 'Unauthorized. You do not own this job vacancy.' });
     }
 

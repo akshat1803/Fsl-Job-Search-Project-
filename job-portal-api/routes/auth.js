@@ -64,7 +64,7 @@ router.post('/register', async (req, res) => {
     if (userRole === 2) {
       candidateId = crypto.randomUUID();
       await connection.query(
-        'INSERT INTO Candidate (Id, UserId, Visibility, IsActive) VALUES (?, ?, "public", TRUE)',
+        'INSERT INTO Candidate (Id, UserId, Visibility, IsActive) VALUES (?, ?, \'public\', TRUE)',
         [candidateId, userId]
       );
     } else if (userRole === 3) {

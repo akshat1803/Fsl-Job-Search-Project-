@@ -79,7 +79,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
   const candidateId = req.params.id ? req.params.id.trim() : ''; // UUID string
 
   // Authorization check: User can only update their own candidate profile
-  if (req.user.role !== 'candidate' || req.user.candidateId !== candidateId) {
+  if (req.user.role !== 'candidate' || !req.user.candidateId || req.user.candidateId.toLowerCase() !== candidateId.toLowerCase()) {
     return res.status(403).json({ success: false, message: 'Unauthorized to update this profile' });
   }
 
@@ -170,7 +170,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
 router.get('/:id/applications', authenticateToken, async (req, res) => {
   const candidateId = req.params.id ? req.params.id.trim() : '';
 
-  if (req.user.role !== 'candidate' || req.user.candidateId !== candidateId) {
+  if (req.user.role !== 'candidate' || !req.user.candidateId || req.user.candidateId.toLowerCase() !== candidateId.toLowerCase()) {
     return res.status(403).json({ success: false, message: 'Unauthorized to view these applications' });
   }
 

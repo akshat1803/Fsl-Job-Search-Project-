@@ -55,7 +55,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
   const companyId = req.params.id ? req.params.id.trim() : '';
 
   // Authorization check
-  if (req.user.role !== 'company' || req.user.companyId !== companyId) {
+  if (req.user.role !== 'company' || !req.user.companyId || req.user.companyId.toLowerCase() !== companyId.toLowerCase()) {
     return res.status(403).json({ success: false, message: 'Unauthorized to update this company profile' });
   }
 

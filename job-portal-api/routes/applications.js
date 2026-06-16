@@ -83,7 +83,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 
   try {
     const [applications] = await pool.query(
-      `SELECT a.*, jv.Title as job_title, jv.CompanyId, c.Name as company_name, c.UserId as company_user_id,
+      `SELECT a.*, jv.Title as job_title, c.Name as company_name, c.UserId as company_user_id,
               u.FirstName as candidate_first_name, u.LastName as candidate_last_name, u.Email as candidate_email,
               cand.UserId as candidate_user_id
        FROM Applications a
@@ -102,8 +102,8 @@ router.get('/:id', authenticateToken, async (req, res) => {
     const application = applications[0];
 
     // Authorization check: Must be candidate owner or company owner of vacancy
-    const isCandidateOwner = req.user.role === 'candidate' && req.user.candidateId === application.CandidateId;
-    const isCompanyOwner = req.user.role === 'company' && req.user.companyId === application.CompanyId;
+    const isCandidateOwner = req.user.role === 'candidate' && req.user.candidateId && application.CandidateId && req.user.candidateId.toLowerCase() === application.CandidateId.toLowerCase();
+    const isCompanyOwner = req.user.role === 'company' && req.user.companyId && application.CompanyId && req.user.companyId.toLowerCase() === application.CompanyId.toLowerCase();
 
     if (!isCandidateOwner && !isCompanyOwner) {
       return res.status(403).json({ success: false, message: 'Access denied. Unauthorized to view application details.' });
@@ -162,7 +162,7 @@ router.put('/:id', authenticateToken, requireRole('company'), async (req, res) =
 
     const application = applications[0];
 
-    if (application.CompanyId !== companyId) {
+    if (!application.CompanyId || application.CompanyId.toLowerCase() !== companyId.toLowerCase()) {
       return res.status(403).json({ success: false, message: 'Unauthorized. You do not own the job vacancy for this application.' });
     }
 
