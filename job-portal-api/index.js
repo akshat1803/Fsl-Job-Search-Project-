@@ -16,9 +16,27 @@ const app = express();
 app.enable('trust proxy');
 const PORT = process.env.PORT || 3000;
 
+// Whitelisted origins for CORS
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://localhost:3001',
+  'https://fsl-job-search-project.onrender.com'
+];
+
 // Standard Middlewares
 app.use(cors({
-  origin: true,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, postman, curl, or same-origin Swagger client)
+    if (!origin) return callback(null, true);
+    
+    // Allow whitelisted production origins or any localhost development origins
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.startsWith('http://localhost:')) {
+      return callback(null, true);
+    }
+    
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
